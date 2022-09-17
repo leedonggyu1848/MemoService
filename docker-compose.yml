@@ -7,6 +7,8 @@ services:
     expose:
       - ${BACKEND_PORT}
     container_name: ${BACKEND_NAME}
+    depends_on:
+      - mariadb
   
   react:
     image: react
@@ -33,3 +35,17 @@ services:
       - FRONTEND_NAME=${FRONTEND_NAME}
       - FRONTEND_PORT=${FRONTEND_PORT}
     
+  mariadb:
+    image: mariadb:10
+    volumes:
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/data:/var/lib/mysql
+    expose:
+      - 3306
+    container_name: dbname
+    environment:
+      - MARIADB_USER=root
+      - MARIADB_ROOT_PASSWORD=admin
+      - MARIADB_DATABASE=memodb
+      - MARIADB_PORT=3306
+      - MARIADB_HOST=dbname

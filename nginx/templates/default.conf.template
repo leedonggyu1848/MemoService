@@ -1,0 +1,14 @@
+server {
+  listen 80;
+  listen [::]:80;
+
+  proxy_set_header host localhost;
+  server_name localhost;
+  location /api {
+    proxy_pass http://${BACKEND_NAME}:${BACKEND_PORT}/api;
+  }
+
+  location / {
+    proxy_pass http://${FRONTEND_NAME}:${FRONTEND_PORT}/;
+  }
+}

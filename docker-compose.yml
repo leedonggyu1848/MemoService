@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  spring:
+    image: spring-boot
+    build: ./backend
+    expose:
+      - ${BACKEND_PORT}
+    container_name: ${BACKEND_NAME}
+  
+  react:
+    image: react
+    build: ./frontend
+    depends_on:
+      - spring
+    expose:
+      - ${FRONTEND_PORT}
+    container_name: ${FRONTEND_NAME}
+
+  nginx:
+    image: nginx:1
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx:/etc/nginx
+    depends_on:
+      - spring
+      - react
+    environment:
+      - BACKEND_NAME=${BACKEND_NAME}    
+      - BACKEND_PORT=${BACKEND_PORT}
+      - FRONTEND_NAME=${FRONTEND_NAME}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+    
